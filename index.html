@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع الذكاء الاصطناعي</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        #chatBox {
+            border: 1px solid #ccc;
+            width: 300px;
+            height: 400px;
+            overflow-y: scroll;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        #userInput {
+            width: 80%;
+            padding: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+        }
+
+        .message {
+            padding: 5px;
+            margin: 5px 0;
+        }
+
+        .userMessage {
+            text-align: right;
+            background-color: #e1f5fe;
+        }
+
+        .aiMessage {
+            text-align: left;
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>موقع الذكاء الاصطناعي</h1>
+    <div id="chatBox"></div>
+    <input type="text" id="userInput" placeholder="اكتب رسالتك هنا..." />
+    <button onclick="sendMessage()">إرسال</button>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+            if (userInput === '') return;
+
+            // إظهار رسالة المستخدم في واجهة المحادثة
+            const chatBox = document.getElementById('chatBox');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message userMessage';
+            userMessage.textContent = userInput;
+            chatBox.appendChild(userMessage);
+
+            // استدعاء الـ API والحصول على الرد
+            fetch(`http://ttrtt.serv00.net/API/it_bero.php?promt=${encodeURIComponent(userInput)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const aiMessage = document.createElement('div');
+                    aiMessage.className = 'message aiMessage';
+                    aiMessage.textContent = data.response;
+                    chatBox.appendChild(aiMessage);
+                    chatBox.scrollTop = chatBox.scrollHeight;  // التمرير لأسفل
+                })
+                .catch(error => {
+                    const errorMessage = document.createElement('div');
+                    errorMessage.className = 'message aiMessage';
+                    errorMessage.textContent = 'حدث خطأ أثناء الاتصال بالذكاء الاصطناعي.';
+                    chatBox.appendChild(errorMessage);
+                });
+
+            // مسح حقل الإدخال بعد الإرسال
+            document.getElementById('userInput').value = '';
+        }
+    </script>
+
+</body>
+</html>
